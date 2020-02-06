@@ -1,0 +1,80 @@
+
+record(aSub, "$(local):asubrx") {
+    field(LFLG,"IGNORE")
+    field(EFLG,"ALWAYS")
+    field(INAM,"init_asubrx")
+    field(SNAM,"my_asubrx")
+    field(INPA, "sim3:asubtx.VALA CPP")
+    field(NOA, "$(nsamples)")
+    field(NOVA, "$(nsamples)")
+    field(NOVB, "5")
+    field(FTA, "LONG")
+    field(FTVA, "LONG")
+    field(FTVB, "DOUBLE")
+    field(OUTB, "sim4lnx:tdiff.A CPP")
+}
+
+record(aSub, "$(local):tdiff") {
+    field(LFLG,"IGNORE")
+    field(EFLG,"ON CHANGE")
+    field(INAM,"")
+    field(SNAM,"tdiff_proc")
+    field(NOA, "5")
+    field(NOVA, "5")
+    field(FTA, "DOUBLE")
+    field(FTVA, "DOUBLE")
+}
+
+#Count to 9, then back to 0.
+record(calc, "$(local):calc") {
+    field(DESC, "Counter")
+    field(SCAN,"1 second")
+    field(FLNK, "$(local):aiExample")
+    field(CALC, "(A<B)?(A+C):D")
+    field(INPA, "$(local):calc.VAL  NPP NMS")
+    field(INPB, "9")
+    field(INPC, "1")
+    field(INPD, "0")
+    field(EGU, "Counts")
+    field(HOPR, "10")
+    field(HIHI, "8")
+    field(HIGH, "6")
+    field(LOW, "4")
+    field(LOLO, "2")
+    field(HHSV, "MAJOR")
+    field(HSV, "MINOR")
+    field(LSV, "MINOR")
+    field(LLSV, "MAJOR")
+}
+
+#Track the calc record 
+record(ai, "$(local):aiExample")
+{
+    field(DESC, "Analog input")
+    field(INP, "$(local):calc.VAL  NPP NMS")
+    field(EGUF, "10")
+    field(EGU, "Counts")
+    field(HOPR, "10")
+    field(LOPR, "0")
+    field(HIHI, "8")
+    field(HIGH, "6")
+    field(LOW, "4")
+    field(LOLO, "2")
+    field(HHSV, "MAJOR")
+    field(HSV, "MINOR")
+    field(LSV, "MINOR")
+    field(LLSV, "MAJOR")
+}
+
+#CB of ai record used to populate the array of asub
+record(compress,"$(local):compressExample")
+{
+    field(DESC, "Circular buffer")
+    field(INP,"$(local):asubrx.VALT PP NMS")
+    field(ALG,"Circular Buffer")
+    field(NSAM,"10")
+    field(HOPR,"10")
+    field(EGU,"Counts")
+}
+
+

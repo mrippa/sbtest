@@ -1,0 +1,20 @@
+# Example substitutions file
+
+#file "db/asub.db" {
+#    { user = "mrippaHost" }
+#
+#}
+
+#Reciever DB
+file db/asubRX.db {
+    pattern { local, remote, nsamples, scan }
+        { "hbfrtdev-lv2", "sim4", 800, "Passive" }
+}
+
+#Transmitter DB
+file db/asubTX.db {
+    pattern { local, remote, nsamples, scan }
+        { "sim4", "hbfrtdev-lv2", 800, "1 second" }
+}
+
+

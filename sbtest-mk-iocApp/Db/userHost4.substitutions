@@ -1,0 +1,11 @@
+# Example substitutions file
+
+#file "db/asub.db" {
+#    { user = "mrippaHost" }
+#
+#}
+
+file db/asub4.db {
+    pattern { user, nsamples, scan }
+        { "sim4", 800, "Passive" }
+}

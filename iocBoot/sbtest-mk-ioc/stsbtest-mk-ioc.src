@@ -1,0 +1,16 @@
+$(LINUX_ONLY)#!${INSTALL}/bin/${ARCH}/sbtest-mk-ioc
+
+cd ${INSTALL}
+
+## Register all support components
+dbLoadDatabase("dbd/sbtest-mk-ioc.dbd")
+sbtest_mk_ioc_registerRecordDeviceDriver(pdbbase)
+
+## Load record instances
+#dbLoadTemplate("db/sbtest-mk-ioc.substitutions")
+#dbLoadRecords("db/sbtest-mk-ioc.db", "user=mrippa")
+
+iocInit
+
+## Start any sequence programs
+#seq(sncxxx, "user=mrippa")

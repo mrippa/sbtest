@@ -1,0 +1,39 @@
+#$(LINUX_ONLY)/gem_sw/test/mrippa/sbtest/bin/${ARCH}/sbtest-mk-ioc
+
+#Running as 10.1.72.12 (hbfrtdev-lv2)
+cd ${INSTALL}
+epicsEnvSet("ENGINEER","Matt Rippa")
+epicsEnvSet("LOCATION","HBF")
+epicsEnvSet("EPICS_CA_MAX_ARRAY_BYTES","32768")
+epicsEnvSet("EPICS_CA_ADDR_LIST","10.1.72.12")
+epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST","NO")
+epicsEnvSet("IOCSH_PS1","sbtest-lnx> ")
+## You may have to change example to something else
+## everywhere it appears in this file
+
+#< envPaths
+
+## Register all support components
+dbLoadDatabase("dbd/sbtest-mk-IOC.dbd")
+sbtest_mk_ioc_registerRecordDeviceDriver(pdbbase)
+
+# - Master ? Simulate ? intPerSecond, intPerTick, timeOffset (microsec)
+#BCconfigure (0, 0, 200, 1, 0)
+
+## Load record instances
+dbLoadTemplate("db/userHostlinux.substitutions")
+dbLoadRecords("db/iocAdminRTEMS.db", "IOC=hbfrtdev-lv2:iocStats")
+#dbLoadRecords("db/asub.db")
+	
+## Set this to see messages from mySub
+var mySubDebug 1
+#var bcDebug 0
+#var bcDebug 1
+
+## Run this to trace the stages of iocInit
+#traceIocInit
+
+iocInit
+
+## Start any sequence programs
+#seq(sncxxx, "user=mrippa")

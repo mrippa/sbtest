@@ -1,0 +1,103 @@
+record(genSub, "$(local):mytime") {
+
+    field(SNAM,"getTime")
+}
+record(aSub,"$(local):asubtx") {
+    field(EFLG,"ALWAYS")
+    field(INAM,"init_my_asub")
+    field(SNAM,"my_asubtx")
+    field(FTA, "LONG")
+    field(FTVA, "LONG")
+    field(NOA, "$(nsamples)")
+    field(NOVA, "$(nsamples)")
+    field(INPA, "$(local):compressExample NPP NMS")
+    field(OUTA, "$(remote):asubrx CPP")
+    field(FLNK, "$(local):calc2.PROC")
+}
+
+record(aSub, "$(local):asubrx") {
+    field(INAM,"init_my_asub")
+    field(SNAM,"my_asubrx")
+    field(FTA, "LONG")
+    field(NOA, "10")
+    field(FTVA, "LONG")
+    field(FTB, "LONG")
+    field(NOB, "10")
+    field(FTVB, "LONG")
+}
+
+#Count down to 0, then back to 9.
+record(calc, "$(local):calc2") {
+    field(DESC, "Counter")
+    field(SCAN,"Passive")
+    field(CALC, "(A>B)?(A-C):D")
+    field(INPA, "$(local):calc2.VAL  NPP NMS")
+    field(INPB, "0")
+    field(INPC, "1")
+    field(INPD, "9")
+    field(EGU, "Counts")
+    field(HOPR, "10")
+    field(HIHI, "8")
+    field(HIGH, "6")
+    field(LOW, "4")
+    field(LOLO, "2")
+    field(HHSV, "MAJOR")
+    field(HSV, "MINOR")
+    field(LSV, "MINOR")
+    field(LLSV, "MAJOR")
+}
+
+#Count to 9, then back to 0.
+record(calc, "$(local):calc") {
+    field(DESC, "Counter")
+    field(SCAN,"1 second")
+    field(FLNK, "$(local):aiExample")
+    field(CALC, "(A<B)?(A+C):D")
+    field(INPA, "$(local):calc.VAL  NPP NMS")
+    field(INPB, "2000")
+    field(INPC, "1")
+    field(INPD, "0")
+    field(EGU, "Counts")
+    field(HOPR, "10")
+    field(HIHI, "8")
+    field(HIGH, "6")
+    field(LOW, "4")
+    field(LOLO, "2")
+    field(HHSV, "MAJOR")
+    field(HSV, "MINOR")
+    field(LSV, "MINOR")
+    field(LLSV, "MAJOR")
+}
+
+#Track the calc record 
+record(ai, "$(local):aiExample")
+{
+    field(DESC, "Analog input")
+    field(INP, "$(local):calc.VAL  NPP NMS")
+    field(EGUF, "10")
+    field(EGU, "Counts")
+    field(HOPR, "10")
+    field(LOPR, "0")
+    field(HIHI, "8")
+    field(HIGH, "6")
+    field(LOW, "4")
+    field(LOLO, "2")
+    field(HHSV, "MAJOR")
+    field(HSV, "MINOR")
+    field(LSV, "MINOR")
+    field(LLSV, "MAJOR")
+}
+
+#CB of ai record used to populate the array of asub
+record(compress,"$(local):compressExample")
+{
+    field(DESC, "Circular buffer")
+    field(INP,"$(local):aiExample.VAL CP NMS")
+    field(ALG,"Circular Buffer")
+    field(NSAM,"2000")
+    field(HOPR,"10")
+    field(EGU,"Counts")
+    field(FLNK,"$(local):asubtx.PROC")
+}
+
+

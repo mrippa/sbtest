@@ -1,0 +1,39 @@
+#$(LINUX_ONLY)#!${INSTALL}/bin/${ARCH}/sbtest-mk-ioc
+
+#Running as sim4 10.1.2.174 (hbfrtdev-lv2)
+cd ${INSTALL_LOCATION}
+epicsEnvSet("ENGINEER","Matt Rippa")
+epicsEnvSet("LOCATION","HBF")
+epicsEnvSet("EPICS_CA_MAX_ARRAY_BYTES","32768")
+epicsEnvSet("EPICS_CA_ADDR_LIST","10.1.71.11")
+epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST","NO")
+epicsEnvSet("IOCSH_PS1","sbtest-mk-sim3> ")
+## You may have to change example to something else
+## everywhere it appears in this file
+
+#< envPaths
+
+## Register all support components
+dbLoadDatabase("dbd/sbtest-mk-ioc.dbd")
+asubtest_mk_IOC_registerRecordDeviceDriver(pdbbase)
+
+#bc635TimeSetTpPrio (-1)
+# - Master ? Simulate ? intPerSecond, intPerTick, timeOffset (microsec)
+BCconfigure (0, 0, 200, 1, 0)
+
+## Load record instances
+dbLoadTemplate("db/userHost3.substitutions")
+dbLoadRecords("db/iocAdminRTEMS.db", "IOC=sim4:iocStats")
+
+## Set this to see messages from mySub
+var mySubDebug 1
+#var bcDebug 0
+#var bcDebug 1
+
+## Run this to trace the stages of iocInit
+#traceIocInit
+
+iocInit
+
+## Start any sequence programs
+#seq(sncxxx, "user=mrippa")

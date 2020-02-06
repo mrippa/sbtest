@@ -1,0 +1,43 @@
+$(LINUX_ONLY)#!${INSTALL}/bin/${ARCH}/asubtest-mk-IOC
+
+#cd ${INSTALL}
+#cd /gem_sw/work/R3.14.12.6/ioc/asubtest/mk
+cd /gem_sw/test/mrippa/asubtest/
+# epicsEnvSet("EPICS_TIMEZONE", "HST::600:0:0")
+#zoneset("UTC0")
+#zoneset("CST3")
+#zoneset("HST10")
+epicsEnvSet("ENGINEER","Matt Rippa")
+epicsEnvSet("LOCATION","HBF")
+epicsEnvSet("EPICS_CA_ADDR_LIST","10.1.2.173")
+epicsEnvSet("IOCSH_PS1","asubtest-mk-sim4> ")
+## You may have to change example to something else
+## everywhere it appears in this file
+
+#< envPaths
+
+## Register all support components
+dbLoadDatabase("dbd/asubtest-mk-IOC.dbd")
+asubtest_mk_IOC_registerRecordDeviceDriver(pdbbase)
+
+bc635TimeSetTpPrio (-1)
+# - Master ? Simulate ? intPerSecond, intPerTick, timeOffset (microsec)
+#BCconfigure (0, 0, 200, 1, 0)
+
+## Load record instances
+dbLoadTemplate("db/userHost4.substitutions")
+dbLoadRecords("db/iocAdminRTEMS.db", "IOC=sim4:iocStats")
+#dbLoadRecords("db/asub.db")
+	
+## Set this to see messages from mySub
+#var mySubDebug 1
+#var bcDebug 0
+#var bcDebug 1
+
+## Run this to trace the stages of iocInit
+#traceIocInit
+
+iocInit
+
+## Start any sequence programs
+#seq(sncxxx, "user=mrippa")
